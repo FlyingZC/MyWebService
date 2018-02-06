@@ -1,0 +1,31 @@
+一.与spring整合
+com.zc.t06spring.cxf.client
+http://localhost:8080/MyWebService/webservice/helloWorld?wsdl
+1.web.xml中
+<!-- cxf WebService服务 -->
+    <servlet>  
+        <servlet-name>CXFServlet</servlet-name>  
+        <servlet-class>  
+               org.apache.cxf.transport.servlet.CXFServlet  
+        </servlet-class>  
+        <load-on-startup>1</load-on-startup>  
+    </servlet>  
+  
+    <servlet-mapping>  
+         <servlet-name>CXFServlet</servlet-name>  
+         <url-pattern>/webservice/*</url-pattern>  
+    </servlet-mapping>  
+    
+2.applicationContext.xml中
+<!-- 首先要导入几个cxf使用的xml文件 -->
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	<!-- 发布服务 -->	
+	<jaxws:endpoint id="wsServer" implementor="com.zc.t06spring.cxf.SecondWSImpl"
+		address="/helloWorld" />
+
+	<bean id="client" class="com.zc.t06spring.cxf.client.SecondWSClient"
+		factory-bean="clientFactory" factory-method="create" />
+运行tomcat,访问    http://localhost:8080/MyWebService/webservice/helloWorld?wsdl.服务端启动成功
+运行TestSpringCxf,客户端访问成功
